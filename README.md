@@ -1,5 +1,9 @@
 # Go package that mimics systemd v253 EnvironmentFile option
 
+[![build](https://github.com/michurin/systemd-env-file/actions/workflows/ci.yaml/badge.svg)](https://github.com/michurin/systemd-env-file/actions/workflows/ci.yaml)
+[![codecov](https://codecov.io/gh/michurin/systemd-env-file/graph/badge.svg?token=H8498O2YEM)](https://codecov.io/gh/michurin/systemd-env-file)
+[![Go Report Card](https://goreportcard.com/badge/github.com/michurin/systemd-env-file)](https://goreportcard.com/report/github.com/michurin/systemd-env-file)
+
 The parser is borrowed from `systemd` `v253` as is. Despite the original parser slightly oversimplify and allows to do weird things, see tests.
 
 ## Motivation
