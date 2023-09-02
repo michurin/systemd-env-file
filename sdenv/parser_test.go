@@ -95,7 +95,7 @@ join lines"
 	} {
 		cs := cs
 		t.Run(cs.name, func(t *testing.T) {
-			kv, err := sdenv.Parser([]rune(cs.data))
+			kv, err := sdenv.Parser([]byte(cs.data))
 			require.NoError(t, err)
 			assert.Equal(t, cs.pairs, kv)
 		})
@@ -103,7 +103,7 @@ join lines"
 }
 
 func TestParser_error(t *testing.T) {
-	kv, err := sdenv.Parser([]rune("ok='"))
+	kv, err := sdenv.Parser([]byte("ok='"))
 	require.Error(t, err)
 	require.Nil(t, kv)
 }
