@@ -135,6 +135,15 @@ in [documentation](https://pkg.go.dev/github.com/michurin/systemd-env-file/sdenv
 and the most detailed in
 [tests](https://github.com/michurin/systemd-env-file/blob/master/sdenv/parser_test.go).
 
+## TODOs and known issues
+
+- Make `Environ` preserve existing variables, now it overrides everything
+- Reconsider library interface. For example: (i) Parser, (ii) "Joiner", (iii) helper (helpers?) to convert pairs `[][2]string` to `[]string` with `=` and back.
+- Since `systemd` `v254` behavior of escapes in comments have been slightly
+  [changed](https://github.com/systemd/systemd/blob/v254/src/basic/env-file.c#L246). (`git difftool --tool=vimdiff v253 v254 src/basic/env-file.c`)
+  It has to be reflected.
+- CLI tool: [consider](https://golang.hotexamples.com/examples/os.exec/Cmd/SysProcAttr/golang-cmd-sysprocattr-method-examples.html) `cmd.SysProcAttr.Setpgid`?
+
 ## Links
 
 - [`parse_env_file_internal`](https://github.com/systemd/systemd/blob/v253/src/basic/env-file.c#L22) — `systemd` implementation
