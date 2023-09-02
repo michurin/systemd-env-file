@@ -17,7 +17,7 @@ const (
 	stEscapeComment
 )
 
-func Parser(stream []rune) ([][2]string, error) { //nolint:gocognit,gocyclo
+func Parser(stream []byte) ([][2]string, error) { //nolint:gocognit,gocyclo
 	// this code was stolen from systemd
 	// https://github.com/systemd/systemd/blob/v253/src/basic/env-file.c#L22
 	// two minor changes are marked by "[bug?]" marker lower
@@ -25,8 +25,8 @@ func Parser(stream []rune) ([][2]string, error) { //nolint:gocognit,gocyclo
 	state := stPreKey
 	keyTrSp := 0
 	valueTrSp := 0
-	key := []rune(nil)
-	value := []rune(nil)
+	key := []byte(nil)
+	value := []byte(nil)
 	for _, c := range stream {
 		switch state {
 		case stPreKey:
@@ -36,7 +36,7 @@ func Parser(stream []rune) ([][2]string, error) { //nolint:gocognit,gocyclo
 			case '\x20', '\t', '\n', '\r':
 			default:
 				state = stKey
-				key = []rune{c}
+				key = []byte{c}
 			}
 		case stKey:
 			switch c {

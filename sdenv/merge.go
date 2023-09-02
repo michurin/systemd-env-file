@@ -9,7 +9,7 @@ func Environ(env []string, filenames ...string) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
-		pairs, err := Parser([]rune(string(cfgData)))
+		pairs, err := Parser(cfgData)
 		if err != nil {
 			return nil, err
 		}
