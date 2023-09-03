@@ -31,6 +31,9 @@ func App(env, args []string, stdout, stderr io.Writer, envFiles []string) error 
 			file = f
 		}
 	}
+	if file == "" {
+		return fmt.Errorf("no env file found")
+	}
 	env, err := sdenv.Environ(env, file)
 	if err != nil {
 		return fmt.Errorf("cannot open env file: %w", err)

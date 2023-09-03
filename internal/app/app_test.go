@@ -57,3 +57,14 @@ func TestApp_errInvalidCmd(t *testing.T) {
 	assert.Equal(t, "", stdout.String())
 	assert.Equal(t, "", stderr.String())
 }
+
+func TestApp_errNotEmptyListButNoMatches(t *testing.T) {
+	stdout := new(bytes.Buffer)
+	stderr := new(bytes.Buffer)
+
+	err := app.App(nil, []string{"placeholder"}, stdout, stderr, []string{"/dev/null"})
+
+	assert.EqualError(t, err, "no env file found")
+	assert.Equal(t, "", stdout.String())
+	assert.Equal(t, "", stderr.String())
+}
