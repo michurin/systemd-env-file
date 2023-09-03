@@ -17,7 +17,9 @@ const (
 	stEscapeComment
 )
 
-func Parser(stream []byte) ([][2]string, error) { //nolint:gocognit,gocyclo
+// Parser parses data from file and returns key-value pairs
+// in the order they appears in the file.
+func Parser(source []byte) ([][2]string, error) { //nolint:gocognit,gocyclo
 	// this code was stolen from systemd
 	// https://github.com/systemd/systemd/blob/v253/src/basic/env-file.c#L22
 	// two minor changes are marked by "[bug?]" marker lower
@@ -27,7 +29,7 @@ func Parser(stream []byte) ([][2]string, error) { //nolint:gocognit,gocyclo
 	valueTrSp := 0
 	key := []byte(nil)
 	value := []byte(nil)
-	for _, c := range stream {
+	for _, c := range source {
 		switch state {
 		case stPreKey:
 			switch c {

@@ -3,17 +3,78 @@
 [![build](https://github.com/michurin/systemd-env-file/actions/workflows/ci.yaml/badge.svg)](https://github.com/michurin/systemd-env-file/actions/workflows/ci.yaml)
 [![codecov](https://codecov.io/gh/michurin/systemd-env-file/graph/badge.svg?token=H8498O2YEM)](https://codecov.io/gh/michurin/systemd-env-file)
 [![Go Report Card](https://goreportcard.com/badge/github.com/michurin/systemd-env-file)](https://goreportcard.com/report/github.com/michurin/systemd-env-file)
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white)](https://pkg.go.dev/github.com/michurin/systemd-env-file/sdenv)
+[![go.dev/play](https://shields.io/badge/go.dev-play-089?logo=go&logoColor=white&style=flat)](https://go.dev/play/p/-SNUijB8ZOM)
 
-The parser is borrowed from `systemd` `v253` as is. Despite the original parser slightly oversimplify and allows to do weird things, see tests.
+The parser is borrowed from `systemd` `v253` as is. Despite the original parser slightly oversimplify and allows to do weird things,
+see [tests](https://github.com/michurin/systemd-env-file/blob/master/sdenv/parser_test.go).
 
 ## Motivation
 
 Common approach is to use environment variables to configure [`golang`](https://go.dev/) programs.
 And [`systemd`](https://systemd.io/) is the most widespread system and service manager.
 It is convenient to use literally the same file as environment holder at debugging time and
-right as [`EnvironmentFile`](https://www.freedesktop.org/software/systemd/man/systemd.exec.html#EnvironmentFile=) in `systemd` `.service`-file.
+right as [`EnvironmentFile`](https://www.freedesktop.org/software/systemd/man/systemd.exec.html#EnvironmentFile=)
+in [`systemd` `.service`-file](https://www.freedesktop.org/software/systemd/man/systemd.service.html).
 
-## Synopses
+There are two seporate things here: (i) library to parse `EnvironmentFile` format and (ii) ready to use binary tool
+to run any processes with environment variables from given file.
+
+## CLI tool
+
+### Simplest usage
+
+```sh
+echo 'TEST = "OK"' >xenv.env
+xenv sh -c 'echo $TEST'
+OK
+```
+
+### Custom env-files
+
+The `XENV` environment variable can be set to tell `xenv` where to look for certain `.env`-files.
+`xenv` will use the first matched file.
+
+```sh
+echo 'TEST = "OK"' >custom.env
+export XENV=/tmp/x.env:./custom.env
+xenv sh -c 'echo $TEST'
+OK
+```
+
+### How to install
+
+Install in standard go way
+
+```sh
+go install github.com/michurin/systemd-env-file/cmd/xenv@latest
+```
+
+The binary will be installed in the directory named by the `GOBIN` environment variable,
+which defaults to `$GOPATH/bin` or `$HOME/go/bin` if the `GOPATH` environment variable is not set.
+
+Build manually and install to custom place
+
+```sh
+go build ./cmd/...
+install xenv /opt/bin # use your favorite options
+```
+
+## Library
+
+```sh
+go get github.com/michurin/systemd-env-file/@latest
+```
+
+```go
+import "github.com/michurin/systemd-env-file/sdenv"
+```
+
+You can play with it at [go online playground](https://go.dev/play/p/-SNUijB8ZOM).
+
+## File format
+
+### Synopses
 
 > Similar to `Environment=`, but reads the environment variables from
 a text file. The text file should contain newline-separated variable assignments. Empty lines, lines
@@ -67,45 +128,21 @@ setting will override the earlier setting.
 
 [systemd documentation](https://www.freedesktop.org/software/systemd/man/systemd.exec.html#EnvironmentFile=)
 
-## Import
+### Examples
 
-```sh
-go get github.com/michurin/systemd-env-file@latest
-```
+You can find examples at [playground](https://go.dev/play/p/-SNUijB8ZOM),
+in [documentation](https://pkg.go.dev/github.com/michurin/systemd-env-file/sdenv)
+and the most detailed in
+[tests](https://github.com/michurin/systemd-env-file/blob/master/sdenv/parser_test.go).
 
-```go
-import "github.com/michurin/systemd-env-file/sdenv"
-```
+## TODOs and known issues
 
-## Binary
-
-### Install
-
-Install in standard go way
-
-```sh
-go install github.com/michurin/systemd-env-file/cmd/xenv@latest
-```
-
-The binary will be installed in the directory named by the `GOBIN` environment variable,
-which defaults to `$GOPATH/bin` or `$HOME/go/bin` if the `GOPATH` environment variable is not set.
-
-Build manually and install to custom place
-
-```sh
-go build ./cmd/...
-install xenv /opt/bin # use your favorite options
-```
-
-### Usage
-
-```sh
-echo 'TEST = "OK"' >xenv.env
-./xenv sh -c 'echo $TEST'
-OK
-./xenv env | grep TEST
-TEST=OK
-```
+- Make `Environ` preserve existing variables, now it overrides everything
+- Reconsider library interface. For example: (i) Parser, (ii) "Joiner", (iii) helper (helpers?) to convert pairs `[][2]string` to `[]string` with `=` and back.
+- Since `systemd` `v254` behavior of escapes in comments have been slightly
+  [changed](https://github.com/systemd/systemd/blob/v254/src/basic/env-file.c#L246). (`git difftool --tool=vimdiff v253 v254 src/basic/env-file.c`)
+  It has to be reflected.
+- CLI tool: [consider](https://golang.hotexamples.com/examples/os.exec/Cmd/SysProcAttr/golang-cmd-sysprocattr-method-examples.html) `cmd.SysProcAttr.Setpgid`?
 
 ## Links
 
