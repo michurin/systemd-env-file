@@ -1,4 +1,4 @@
-# Go package that mimics systemd v253 EnvironmentFile option
+# Go package that mimics systemd v254 EnvironmentFile option
 
 [![build](https://github.com/michurin/systemd-env-file/actions/workflows/ci.yaml/badge.svg)](https://github.com/michurin/systemd-env-file/actions/workflows/ci.yaml)
 [![codecov](https://codecov.io/gh/michurin/systemd-env-file/graph/badge.svg?token=H8498O2YEM)](https://codecov.io/gh/michurin/systemd-env-file)
@@ -6,7 +6,7 @@
 [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white)](https://pkg.go.dev/github.com/michurin/systemd-env-file/sdenv)
 [![go.dev/play](https://shields.io/badge/go.dev-play-089?logo=go&logoColor=white&style=flat)](https://go.dev/play/p/-SNUijB8ZOM)
 
-The parser is borrowed from `systemd` `v253` as is. Despite the original parser slightly oversimplify and allows to do weird things,
+The parser is borrowed from `systemd` `v254` as is. Despite the original parser slightly oversimplify and allows to do weird things,
 see [tests](https://github.com/michurin/systemd-env-file/blob/master/sdenv/parser_test.go).
 
 ## Motivation
@@ -139,12 +139,13 @@ and the most detailed in
 
 - Make `Environ` preserve existing variables, now it overrides everything
 - Reconsider library interface. For example: (i) Parser, (ii) "Joiner", (iii) helper (helpers?) to convert pairs `[][2]string` to `[]string` with `=` and back.
-- Since `systemd` `v254` behavior of escapes in comments have been slightly
-  [changed](https://github.com/systemd/systemd/blob/v254/src/basic/env-file.c#L246). (`git difftool --tool=vimdiff v253 v254 src/basic/env-file.c`)
-  It has to be reflected.
+- CLI tool: proxy exit code
+- CLI tool: consider `SIGPIPE`? or just ignore it like UNIX shells do?
 - CLI tool: [consider](https://golang.hotexamples.com/examples/os.exec/Cmd/SysProcAttr/golang-cmd-sysprocattr-method-examples.html) `cmd.SysProcAttr.Setpgid`?
 
 ## Links
 
-- [`parse_env_file_internal`](https://github.com/systemd/systemd/blob/v253/src/basic/env-file.c#L22) — `systemd` implementation
-- Useful constants: [[1](https://github.com/systemd/systemd/blob/v253/src/basic/string-util.h#L13)], [[2](https://github.com/systemd/systemd/blob/v253/src/basic/escape.h#L15)]
+- [`parse_env_file_internal`](https://github.com/systemd/systemd/blob/v254/src/basic/env-file.c#L22) — `systemd` implementation
+- Useful constants:
+  [[1](https://github.com/systemd/systemd/blob/v254/src/basic/string-util.h#L13)],
+  [[2](https://github.com/systemd/systemd/blob/v254/src/basic/escape.h#L15)]

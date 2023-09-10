@@ -55,8 +55,9 @@ func TestParser_ok(t *testing.T) {
 			data: `
 			lines without equal character are skipped
 			# comments can be started by # and ;
-			# backslash continue comments \
-			this=is_still_comment
+			# backslash are allowed in comments \x
+			# however comments don't continue after backslash since systemd v254 \
+			key=value
 			; and comments have to start at the start
 			; of line
 			this = comment ; considering as part of value
@@ -77,6 +78,7 @@ allow multi lines"
 join lines"
 			`,
 			pairs: [][2]string{
+				{"key", "value"},
 				{"this", "comment ; considering as part of value"},
 				{"just Key", "just Value"},
 				{"Ex1", `single quotes works like that`},

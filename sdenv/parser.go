@@ -21,7 +21,7 @@ const (
 // in the order they appears in the file.
 func Parser(source []byte) ([][2]string, error) { //nolint:gocognit,gocyclo
 	// this code was stolen from systemd
-	// https://github.com/systemd/systemd/blob/v253/src/basic/env-file.c#L22
+	// https://github.com/systemd/systemd/blob/v254/src/basic/env-file.c#L22
 	// two minor changes are marked by "[bug?]" marker lower
 	result := [][2]string{}
 	state := stPreKey
@@ -132,7 +132,12 @@ func Parser(source []byte) ([][2]string, error) { //nolint:gocognit,gocyclo
 				state = stPreKey
 			}
 		case stEscapeComment:
-			state = stComment
+			switch c {
+			case '\n', '\r':
+				state = stPreKey // since systemd v254
+			default:
+				state = stComment
+			}
 		}
 	}
 	switch state {
