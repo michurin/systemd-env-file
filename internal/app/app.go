@@ -16,6 +16,7 @@ func App(env, args []string, stdout, stderr io.Writer, envFiles []string) error 
 	if len(args) < 1 {
 		return fmt.Errorf("you are to specify command")
 	}
+
 	file := ""
 	if len(envFiles) == 0 {
 		file = "xenv.env"
@@ -34,14 +35,25 @@ func App(env, args []string, stdout, stderr io.Writer, envFiles []string) error 
 	if file == "" {
 		return fmt.Errorf("no env file found")
 	}
-	env, err := sdenv.Environ(env, file)
+
+	data, err := os.ReadFile(file)
 	if err != nil {
-		return fmt.Errorf("cannot open env file: %w", err)
+		return fmt.Errorf("readfile: %w", err)
 	}
+
+	pairs, err := sdenv.Parser(data)
+	if err != nil {
+		return fmt.Errorf("parser: %s: %w", file, err)
+	}
+
+	c := sdenv.NewCollectsion()
+	c.PushStd(env)
+	c.Push(pairs)
+
 	cmd := exec.Command(args[0], args[1:]...) //nolint:gosec
 	cmd.Stdout = stdout
 	cmd.Stderr = stderr
-	cmd.Env = env
+	cmd.Env = c.CollectionStd()
 	err = cmd.Run()
 	if err != nil {
 		return fmt.Errorf("cannot run command: %w", err)
