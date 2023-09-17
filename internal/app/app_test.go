@@ -31,7 +31,7 @@ func TestApp_errReadingEnvFile(t *testing.T) {
 
 	err := app.App(nil, []string{"testdata/script.sh", "1", "2"}, stdout, stderr, nil)
 
-	assert.EqualError(t, err, "cannot open env file: open xenv.env: no such file or directory")
+	assert.EqualError(t, err, "readfile: open xenv.env: no such file or directory")
 	assert.Equal(t, "", stdout.String())
 	assert.Equal(t, "", stderr.String())
 }
@@ -65,6 +65,17 @@ func TestApp_errNotEmptyListButNoMatches(t *testing.T) {
 	err := app.App(nil, []string{"placeholder"}, stdout, stderr, []string{"/dev/null"})
 
 	assert.EqualError(t, err, "no env file found")
+	assert.Equal(t, "", stdout.String())
+	assert.Equal(t, "", stderr.String())
+}
+
+func TestApp_errInvalidFileFormat(t *testing.T) {
+	stdout := new(bytes.Buffer)
+	stderr := new(bytes.Buffer)
+
+	err := app.App(nil, []string{"placeholder"}, stdout, stderr, []string{"testdata/invalid.env"})
+
+	assert.EqualError(t, err, "parser: testdata/invalid.env: unexpected end of file")
 	assert.Equal(t, "", stdout.String())
 	assert.Equal(t, "", stderr.String())
 }
