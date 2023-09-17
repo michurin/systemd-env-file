@@ -137,8 +137,6 @@ and the most detailed in
 
 ## TODOs and known issues
 
-- Make `Environ` preserve existing variables, now it overrides everything
-- Reconsider library interface. For example: (i) Parser, (ii) "Joiner", (iii) helper (helpers?) to convert pairs `[][2]string` to `[]string` with `=` and back.
 - CLI tool: proxy exit code
 - CLI tool: consider `SIGPIPE`? or just ignore it like UNIX shells do?
 - CLI tool: [consider](https://golang.hotexamples.com/examples/os.exec/Cmd/SysProcAttr/golang-cmd-sysprocattr-method-examples.html) `cmd.SysProcAttr.Setpgid`?
