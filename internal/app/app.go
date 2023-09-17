@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"io/fs"
@@ -12,9 +13,9 @@ import (
 
 const skipFileMode = fs.ModeType ^ fs.ModeSymlink
 
-func App(env, args []string, stdout, stderr io.Writer, envFiles []string) error {
+func App(env, args []string, stdout, stderr io.Writer, envFiles []string) (int, error) {
 	if len(args) < 1 {
-		return fmt.Errorf("you are to specify command")
+		return 0, fmt.Errorf("you are to specify command")
 	}
 
 	file := ""
@@ -33,17 +34,17 @@ func App(env, args []string, stdout, stderr io.Writer, envFiles []string) error 
 		}
 	}
 	if file == "" {
-		return fmt.Errorf("no env file found")
+		return 0, fmt.Errorf("no env file found")
 	}
 
 	data, err := os.ReadFile(file)
 	if err != nil {
-		return fmt.Errorf("readfile: %w", err)
+		return 0, fmt.Errorf("readfile: %w", err)
 	}
 
 	pairs, err := sdenv.Parser(data)
 	if err != nil {
-		return fmt.Errorf("parser: %s: %w", file, err)
+		return 0, fmt.Errorf("parser: %s: %w", file, err)
 	}
 
 	c := sdenv.NewCollectsion()
@@ -56,7 +57,14 @@ func App(env, args []string, stdout, stderr io.Writer, envFiles []string) error 
 	cmd.Env = c.CollectionStd()
 	err = cmd.Run()
 	if err != nil {
-		return fmt.Errorf("cannot run command: %w", err)
+		e := new(exec.ExitError)
+		if errors.As(err, &e) {
+			ec := e.ExitCode()
+			if ec >= 0 { // normal exit: not signaled, not coredumped...
+				return ec, nil
+			}
+		}
+		return 0, fmt.Errorf("cannot run command: %w", err)
 	}
-	return nil
+	return 0, nil
 }

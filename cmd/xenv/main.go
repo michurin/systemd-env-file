@@ -9,8 +9,10 @@ import (
 )
 
 func main() {
-	err := app.App(os.Environ(), os.Args[1:], os.Stdout, os.Stderr, args.Split(os.Getenv("XENV")))
+	exitCode, err := app.App(os.Environ(), os.Args[1:], os.Stdout, os.Stderr, args.Split(os.Getenv("XENV")))
 	if err != nil {
 		log.Println("Error:", err)
+		os.Exit(127) //nolint: gomnd
 	}
+	os.Exit(exitCode)
 }
