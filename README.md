@@ -137,7 +137,6 @@ and the most detailed in
 
 ## TODOs and known issues
 
-- CLI tool: proxy exit code
 - CLI tool: consider `SIGPIPE`? or just ignore it like UNIX shells do?
 - CLI tool: [consider](https://golang.hotexamples.com/examples/os.exec/Cmd/SysProcAttr/golang-cmd-sysprocattr-method-examples.html) `cmd.SysProcAttr.Setpgid`?
 
