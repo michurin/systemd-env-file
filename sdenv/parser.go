@@ -1,3 +1,4 @@
+// Package sdenv implements systemd's EnvironmentFile parser.
 package sdenv
 
 import "errors"
