@@ -1,12 +1,32 @@
 package sdenv_test
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
 	"github.com/michurin/systemd-env-file/sdenv"
 )
+
+func ExampleCollection() {
+	c := sdenv.NewCollectsion()
+	c.PushStd([]string{ // adding first bunch
+		"A=1",
+		"B=2",
+		"A=3", // redefine A=1
+	})
+	c.PushStd([]string{ // adding second bunch
+		"A=4", // will be skipped as known from previous bunch
+		"C=5",
+	})
+	fmt.Println(strings.Join(c.CollectionStd(), "\n"))
+	// output:
+	// B=2
+	// A=3
+	// C=5
+}
 
 func TestCollectsion(t *testing.T) {
 	c := sdenv.NewCollectsion()

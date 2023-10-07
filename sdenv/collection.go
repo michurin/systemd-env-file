@@ -2,6 +2,7 @@ package sdenv
 
 import "strings"
 
+// Collection helps to manage bunches of variables.
 type Collection struct {
 	keys  map[string]struct{}
 	pairs [][2]string
@@ -14,7 +15,7 @@ func NewCollectsion() *Collection {
 	}
 }
 
-// Push adds pairs into collection. It keeps order of pairs.
+// Push adds bunch of pairs into collection. It keeps order of pairs.
 // For equal keys it takes the last pair. It skips known keys.
 // It is not thread safe.
 func (c *Collection) Push(pairs [][2]string) {
@@ -40,6 +41,7 @@ func (c *Collection) Push(pairs [][2]string) {
 }
 
 // PushStd does the same things as Push, but accept os.Environ() formatted pairs (KEY=VALUE).
+// It is not thread safe.
 func (c *Collection) PushStd(s []string) {
 	pairs := make([][2]string, len(s))
 	for i, x := range s {
@@ -50,12 +52,15 @@ func (c *Collection) PushStd(s []string) {
 	c.Push(pairs)
 }
 
-// Collection returns the collection. Do not change the resulting slice.
+// Collection returns the collection.
+// Please do not mutate the result.
+// This method is not thread safe.
 func (c *Collection) Collection() [][2]string {
 	return c.pairs
 }
 
 // CollectionStd is a version of Collection, that returns results in os.Environ() format.
+// It is not thread safe.
 func (c *Collection) CollectionStd() []string {
 	r := make([]string, len(c.pairs))
 	for i, x := range c.pairs {
