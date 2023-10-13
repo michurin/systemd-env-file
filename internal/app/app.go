@@ -1,7 +1,6 @@
 package app
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -9,13 +8,14 @@ import (
 	"os"
 	"os/exec"
 	"runtime/debug"
+	"syscall"
 
 	"github.com/michurin/systemd-env-file/sdenv"
 )
 
 const skipFileMode = fs.ModeType ^ fs.ModeSymlink
 
-func App(env, args []string, stdout, stderr io.Writer, envFiles []string) (int, error) {
+func App(env, args []string, stderr io.Writer, envFiles []string) (int, error) {
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
 	f.SetOutput(stderr)
 	f.Usage = func() {
@@ -79,20 +79,13 @@ func App(env, args []string, stdout, stderr io.Writer, envFiles []string) (int, 
 	c.PushStd(env)
 	c.Push(pairs)
 
-	cmd := exec.Command(f.Arg(0), f.Args()[1:]...) //nolint:gosec
-	cmd.Stdout = stdout
-	cmd.Stderr = stderr
-	cmd.Env = c.CollectionStd()
-	err = cmd.Run()
+	lp, err := exec.LookPath(f.Arg(0))
 	if err != nil {
-		e := new(exec.ExitError)
-		if errors.As(err, &e) {
-			ec := e.ExitCode()
-			if ec >= 0 { // normal exit: not signaled, not coredumped...
-				return ec, nil
-			}
-		}
-		return 0, fmt.Errorf("cannot run command: %w", err)
+		return 0, fmt.Errorf("lookup executable: %w", err)
 	}
-	return 0, nil
+	err = syscall.Exec(lp, f.Args(), c.CollectionStd())
+	if err != nil {
+		return 0, fmt.Errorf("exec: %w", err)
+	}
+	return 0, nil // how can we get here?
 }

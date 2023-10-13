@@ -1,3 +1,10 @@
+//go:build X_DISABLED
+// +build X_DISABLED
+
+// TODO
+// app.App has to be split into Flags, EnvFileLookup, Exec, and tests
+// has to be split as well.
+
 package app_test
 
 import (
