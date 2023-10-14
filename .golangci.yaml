@@ -28,5 +28,6 @@ linters-settings:
       - standard
       - default
       - prefix(github.com/michurin/systemd-env-file)
+  lll: {line-length: 160}
   funlen: {statements: 150, lines: 150} # parsers are long
   cyclop: {max-complexity: 50}          # and "complex"
