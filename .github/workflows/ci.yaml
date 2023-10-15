@@ -13,19 +13,16 @@ jobs:
           - "1.19"
           - "1.20"
           - "1.21"
-    name: "Go ${{ matrix.go }} build"
+    name: "Go ${{ matrix.go }} build and integration test"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
         with:
           go-version: "${{ matrix.go }}"
-      - run: "go version"
-      - run: "test ! -e xenv"
-      - run: "go build ./cmd/xenv"
-      - run: "test -e xenv"
+      - run: "cmd/xenv/ci/run"
   test:
     runs-on: ubuntu-latest
-    name: "Test and lint"
+    name: "Unit test and lint"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4

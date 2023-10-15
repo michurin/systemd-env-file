@@ -1,0 +1,3 @@
+usage: xenv [flags] command [args ...]
+  -h	show help message
+  -v	show version

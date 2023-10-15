@@ -1,0 +1,1 @@
+$BIN sh -c 'echo $X_ENV_VAR'
