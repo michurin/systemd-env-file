@@ -1,0 +1,38 @@
+#!/bin/sh
+
+set -e
+# set -x
+
+cd "${0%/*}"
+
+go version
+
+go build ..
+BIN=./xenv
+
+o=out
+mkdir -p "$o"
+
+for i in cases/*
+do
+    j="${i##*/}"
+    echo "Case: $i ($j)"
+    for e in out err code
+    do
+        echo "[no content]" >"$o/$j.$e"
+    done
+    set +e
+    . "$i" >"$o/$j.out" 2>"$o/$j.err"
+    echo "$?" >"$o/$j.code"
+    set -e
+done
+
+# dump original -v output for manual check
+echo ''
+echo 'Original -v output'
+cat "$o/opt-v.err"
+echo 'EOF'
+# tweak version info
+sed -i -n '1s/@.*//p' "$o/opt-v.err"
+
+diff -r $o expect
