@@ -115,5 +115,5 @@ func execute(env []string) {
 
 func exit(format string, a ...any) {
 	fmt.Fprintf(os.Stderr, format, a...)
-	os.Exit(2) //nolint:gomnd
+	os.Exit(2) //nolint:mnd
 }

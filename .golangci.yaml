@@ -1,21 +1,15 @@
 linters:
   enable-all: true
   disable:
-      # deprecated (v1.52.2)
-    - deadcode
-    - exhaustivestruct
-    - golint
-    - ifshort
-    - interfacer
-    - maligned
-    - nosnakecase
-    - scopelint
-    - structcheck
-    - varcheck
-
+      # deprecated (since v1.58.0)
+    - execinquery
+    - gomnd
+      # disabled because the Go version (1.20)
+    - copyloopvar
+    - intrange
       # project too small to be such paranoiac
     - depguard
-    - goerr113
+    - err113
     - nlreturn
     - paralleltest
     - varnamelen
