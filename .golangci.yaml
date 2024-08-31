@@ -1,7 +1,8 @@
 linters:
   enable-all: true
   disable:
-      # deprecated (since v1.58.0)
+      # deprecated
+    - exportloopref
     - execinquery
     - gomnd
       # disabled because the Go version (1.20)
