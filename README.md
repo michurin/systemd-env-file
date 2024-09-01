@@ -1,4 +1,4 @@
-# Go package that mimics systemd v255 EnvironmentFile option
+# Go package that mimics systemd EnvironmentFile option
 
 [![build](https://github.com/michurin/systemd-env-file/actions/workflows/ci.yaml/badge.svg)](https://github.com/michurin/systemd-env-file/actions/workflows/ci.yaml)
 [![codecov](https://codecov.io/gh/michurin/systemd-env-file/graph/badge.svg?token=H8498O2YEM)](https://codecov.io/gh/michurin/systemd-env-file)
@@ -6,7 +6,7 @@
 [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white)](https://pkg.go.dev/github.com/michurin/systemd-env-file/sdenv)
 [![go.dev/play](https://shields.io/badge/go.dev-play-089?logo=go&logoColor=white&style=flat)](https://go.dev/play/p/-SNUijB8ZOM)
 
-The parser is borrowed from `systemd` `v255` as is. Despite the original parser slightly oversimplify and allows to do weird things,
+The parser is borrowed from `systemd` `v256` as is. Despite the original parser slightly oversimplify and allows to do weird things,
 see [tests](https://github.com/michurin/systemd-env-file/blob/master/sdenv/parser_test.go).
 
 ## Motivation
@@ -144,7 +144,7 @@ and the most detailed in
 
 ## Links
 
-- [`parse_env_file_internal`](https://github.com/systemd/systemd/blob/v255/src/basic/env-file.c#L22) — `systemd` implementation
+- [`parse_env_file_internal`](https://github.com/systemd/systemd/blob/v256/src/basic/env-file.c#L22) — `systemd` implementation
 - Useful constants:
-  [[1](https://github.com/systemd/systemd/blob/v255/src/basic/string-util.h#L13)],
-  [[2](https://github.com/systemd/systemd/blob/v255/src/basic/escape.h#L15)]
+  [[1](https://github.com/systemd/systemd/blob/v256/src/basic/string-util.h#L13)],
+  [[2](https://github.com/systemd/systemd/blob/v256/src/basic/escape.h#L15)]
