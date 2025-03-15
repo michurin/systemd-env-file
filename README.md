@@ -6,19 +6,45 @@
 [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white)](https://pkg.go.dev/github.com/michurin/systemd-env-file/sdenv)
 [![go.dev/play](https://shields.io/badge/go.dev-play-089?logo=go&logoColor=white&style=flat)](https://go.dev/play/p/-SNUijB8ZOM)
 
-The parser is borrowed from `systemd` `v256` as is. Despite the original parser slightly oversimplify and allows to do weird things,
+The parser is borrowed from `systemd` `v256` as is. Despite the original parser is slightly oversimplified and allows to do weird things,
 see [tests](https://github.com/michurin/systemd-env-file/blob/master/sdenv/parser_test.go).
 
 ## Motivation
 
 Common approach is to use environment variables to configure [`golang`](https://go.dev/) programs.
-And [`systemd`](https://systemd.io/) is the most widespread system and service manager.
-It is convenient to use literally the same file as environment holder at debugging time and
-right as [`EnvironmentFile`](https://www.freedesktop.org/software/systemd/man/systemd.exec.html#EnvironmentFile=)
-in [`systemd` `.service`-file](https://www.freedesktop.org/software/systemd/man/systemd.service.html).
+The question is how to load the environment variables from file?
+You can use shell options like `source` or `eval` in conjunction with `sed`...
+However, those ways are still awkward and not safe. In addition, you still enable to reuse your `source` file.
 
-There are two seporate things here: (i) library to parse `EnvironmentFile` format and (ii) ready to use binary tool
+On the other hand, [`systemd`](https://systemd.io/) is the most widespread system and service manager.
+It allows you to load the environment variables right from file,
+using [`EnvironmentFile`](https://www.freedesktop.org/software/systemd/man/systemd.exec.html#EnvironmentFile=) option.
+
+Meet the thing that solves the problem.
+
+There are two separate things here: (i) library to parse `EnvironmentFile` format and (ii) ready to use binary tool
 to run any processes with environment variables from given file.
+
+Most obvious use case is to share literally the same file in systemd `service`-file, like that:
+
+```ini
+[Service]
+EnvironmentFile=/opt/golem/golem.env
+```
+
+And in development like that:
+
+```sh
+XENV=/opt/golem/golem.env xenv go run ./cmd/golem/...
+```
+
+or
+
+```sh
+cp /opt/golem/golem.env xenv.env
+vi xenv.env # tune for development mode
+xenv go run ./cmd/golem/...
+```
 
 ## CLI tool
 
@@ -70,7 +96,7 @@ go get github.com/michurin/systemd-env-file/@latest
 import "github.com/michurin/systemd-env-file/sdenv"
 ```
 
-You can play with it at [go online playground](https://go.dev/play/p/-SNUijB8ZOM).
+You can play with it right now at [go online playground](https://go.dev/play/p/-SNUijB8ZOM).
 
 ## File format
 
