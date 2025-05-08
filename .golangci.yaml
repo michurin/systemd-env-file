@@ -1,26 +1,53 @@
+version: "2"
 linters:
-  enable-all: true
+  default: all
   disable:
-      # deprecated
-    - tenv
-      # disabled because the Go version (1.20)
     - copyloopvar
-    - intrange
-      # project too small to be such paranoiac
-    - depguard
     - err113
+    - intrange
     - nlreturn
     - paralleltest
+    - revive
     - varnamelen
     - wrapcheck
     - wsl
-
-linters-settings:
-  gci:
-    sections:
-      - standard
-      - default
-      - prefix(github.com/michurin/systemd-env-file)
-  lll: {line-length: 160}
-  funlen: {statements: 150, lines: 150} # parsers are long
-  cyclop: {max-complexity: 50}          # and "complex"
+  settings:
+    cyclop:
+      max-complexity: 50
+    funlen:
+      lines: 150
+      statements: 150
+    lll:
+      line-length: 160
+    depguard:
+      rules:
+        test:
+          files:
+            - "$test"
+          allow:
+            - "$gostd"
+            - github.com/michurin/systemd-env-file/sdenv
+            - github.com/stretchr/testify/
+  exclusions:
+    generated: lax
+    warn-unused: true
+    rules:
+      - path: cmd/xenv/main.go
+        linters:
+          - gosec
+      - path: cmd/xenv/main.go
+        source: "\\sfmt\\.Fprint(ln|f)\\("
+        linters:
+          - errcheck
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/michurin/systemd-env-file)
