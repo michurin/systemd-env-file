@@ -1,3 +1,4 @@
 usage: xenv [flags] command [args ...]
   -h	show help message
+  -d	debug
   -v	show version

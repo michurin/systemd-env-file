@@ -163,8 +163,7 @@ and the most detailed in
 
 ## TODOs and known issues
 
-- `-d` for debugging
-- [Go doc](https://tip.golang.org/doc/comment)
+- [Go doc](https://tip.golang.org/doc/comment), hide `README.md` behind `.github` and customize the [root documentation page](https://pkg.go.dev/github.com/michurin/systemd-env-file).
 - Consider [docker compose](https://github.com/compose-spec/compose-go/blob/master/dotenv/env.go)'s parser API. Mimic it's interface?
 - Export environment in [docker compose format](https://docs.docker.com/compose/compose-file/05-services/#env_file)?
 

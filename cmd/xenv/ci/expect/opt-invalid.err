@@ -1,4 +1,5 @@
 flag provided but not defined: -X
 usage: xenv [flags] command [args ...]
   -h	show help message
+  -d	debug
   -v	show version

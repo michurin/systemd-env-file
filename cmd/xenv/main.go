@@ -19,7 +19,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"io/fs"
+	"log"
 	"os"
 	"os/exec"
 	"runtime/debug"
@@ -47,6 +49,7 @@ func opts() {
 		flag.PrintDefaults()
 	}
 	versionFlag := flag.Bool("v", false, "show version")
+	debugginFlag := flag.Bool("d", false, "debug")
 	flag.Parse() // we do not need to check error cause ExitOnError
 
 	if versionFlag != nil && *versionFlag {
@@ -58,6 +61,11 @@ func opts() {
 			bi.String())
 		os.Exit(0)
 	}
+	if debugginFlag != nil && *debugginFlag {
+		log.SetOutput(os.Stderr)
+	} else {
+		log.SetOutput(io.Discard) // just mute default logger
+	}
 	if flag.NArg() < 1 {
 		exit("Error: you have to specify command\n")
 	}
@@ -67,16 +75,23 @@ func lookupEnvFile() string {
 	const skipFileMode = fs.ModeType ^ fs.ModeSymlink
 	s := os.Getenv("XENV")
 	if len(s) == 0 {
+		log.Println("No $XENV, just taking xenv.env from current directory")
 		return "xenv.env"
 	}
+	log.Println("Considering $XENV:", s)
 	for _, f := range strings.Split(s, ":") {
+		log.Println("Considering part:", f)
 		fi, err := os.Stat(f)
 		if err != nil {
+			log.Println("Skipping part due to error:", err.Error())
 			continue
 		}
-		if fi.Mode()&skipFileMode != 0 {
+		mode := fi.Mode()
+		if mode&skipFileMode != 0 {
+			log.Printf("Skipping part due to mode: %[1]s, skipping reason: %[2]s", mode, mode&skipFileMode)
 			continue
 		}
+		log.Printf("File is taken: %s", f)
 		return f
 	}
 	exit("No env file found\n")
