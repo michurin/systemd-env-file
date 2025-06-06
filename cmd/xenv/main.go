@@ -63,6 +63,8 @@ func opts() {
 	}
 	if debugginFlag != nil && *debugginFlag {
 		log.SetOutput(os.Stderr)
+		log.SetFlags(0)
+		log.SetPrefix("DEBUG: ")
 	} else {
 		log.SetOutput(io.Discard) // just mute default logger
 	}

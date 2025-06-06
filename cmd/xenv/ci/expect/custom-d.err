@@ -1,0 +1,7 @@
+DEBUG: Considering $XENV: /dev/null:/NOTEXISTS:./xenv.custom.env
+DEBUG: Considering part: /dev/null
+DEBUG: Skipping part due to mode: Dcrw-rw-rw-, skipping reason: Dc---------
+DEBUG: Considering part: /NOTEXISTS
+DEBUG: Skipping part due to error: stat /NOTEXISTS: no such file or directory
+DEBUG: Considering part: ./xenv.custom.env
+DEBUG: File is taken: ./xenv.custom.env

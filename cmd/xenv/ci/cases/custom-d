@@ -1,0 +1,1 @@
+XENV=/dev/null:/NOTEXISTS:./xenv.custom.env $BIN -d sh -c 'echo $X_ENV_VAR'
