@@ -69,7 +69,7 @@ func opts() {
 		log.SetOutput(io.Discard) // just mute default logger
 	}
 	if flag.NArg() < 1 {
-		exit("Error: you have to specify command\n")
+		exitf("Error: you have to specify command")
 	}
 }
 
@@ -96,19 +96,19 @@ func lookupEnvFile() string {
 		log.Printf("File is taken: %s", f)
 		return f
 	}
-	exit("No env file found\n")
+	exitf("No env file found")
 	return "" // unreachable
 }
 
 func buildEnv(envFile string) []string {
 	data, err := os.ReadFile(envFile)
 	if err != nil {
-		exit("Cannot read file %s: %v\n", envFile, err)
+		exitf("Cannot read file %s: %v", envFile, err)
 	}
 
 	pairs, err := sdenv.Parser(data)
 	if err != nil {
-		exit("Cannot parse: %s: %v\n", envFile, err)
+		exitf("Cannot parse: %s: %v", envFile, err)
 	}
 
 	c := sdenv.NewCollectsion()
@@ -121,16 +121,17 @@ func execute(env []string) {
 	cmdArgs := flag.Args()
 	lp, err := exec.LookPath(cmdArgs[0])
 	if err != nil {
-		exit("Lookup executable: %s: %v\n", cmdArgs[0], err)
+		exitf("Lookup executable: %s: %v", cmdArgs[0], err)
 	}
 	err = syscall.Exec(lp, cmdArgs, env)
 	if err != nil {
-		exit("Exec: %v\n", err)
+		exitf("Exec: %v", err)
 	}
-	exit("Exec: exited without error (looks like error)\n")
+	exitf("Exec: exited without error (looks like error)")
 }
 
-func exit(format string, a ...any) {
+func exitf(format string, a ...any) {
 	fmt.Fprintf(os.Stderr, format, a...)
+	fmt.Fprint(os.Stderr, "\n")
 	os.Exit(2) //nolint:mnd
 }
