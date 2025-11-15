@@ -29,6 +29,7 @@ func ExampleCollection() {
 }
 
 func TestCollectsion(t *testing.T) {
+	t.Parallel()
 	c := sdenv.NewCollectsion()
 	c.Push([][2]string{
 		{"A", "1"},
@@ -50,6 +51,7 @@ func TestCollectsion(t *testing.T) {
 }
 
 func TestCollectsion_std(t *testing.T) {
+	t.Parallel()
 	c := sdenv.NewCollectsion()
 	c.PushStd([]string{"A=1", "B=", "=3", "=", ""})
 	assert.Equal(t, []string{

@@ -10,6 +10,7 @@ import (
 )
 
 func TestParser_ok(t *testing.T) {
+	t.Parallel()
 	for _, cs := range []struct {
 		name  string
 		data  string
@@ -97,6 +98,7 @@ join lines"
 	} {
 		cs := cs
 		t.Run(cs.name, func(t *testing.T) {
+			t.Parallel()
 			kv, err := sdenv.Parser([]byte(cs.data))
 			require.NoError(t, err)
 			assert.Equal(t, cs.pairs, kv)
@@ -105,6 +107,7 @@ join lines"
 }
 
 func TestParser_error(t *testing.T) {
+	t.Parallel()
 	kv, err := sdenv.Parser([]byte("ok='"))
 	require.ErrorIs(t, err, sdenv.ErrUnxpectedEOF)
 	require.Nil(t, kv)
