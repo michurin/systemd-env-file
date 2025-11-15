@@ -18,6 +18,8 @@ const (
 	stEscapeComment
 )
 
+var ErrUnxpectedEOF = errors.New("unexpected end of file")
+
 // Parser parses data from file and returns key-value pairs
 // in the order they appears in the file.
 func Parser(source []byte) ([][2]string, error) { //nolint:gocognit,gocyclo
@@ -146,7 +148,7 @@ func Parser(source []byte) ([][2]string, error) { //nolint:gocognit,gocyclo
 		result = append(result, [2]string{string(key[:len(key)-keyTrSp]), string(value[:len(value)-valueTrSp])})
 	case stSingleQuot, stDoubleQuot, stEscape, stEscapeDoubleQuot, stEscapeComment:
 		// [bug?] original code doesn't consider this states as mistaken
-		return nil, errors.New("unexpected end of file")
+		return nil, ErrUnxpectedEOF
 	case stKey, stPreKey, stComment:
 	}
 	return result, nil

@@ -106,6 +106,6 @@ join lines"
 
 func TestParser_error(t *testing.T) {
 	kv, err := sdenv.Parser([]byte("ok='"))
-	require.Error(t, err)
+	require.ErrorIs(t, err, sdenv.ErrUnxpectedEOF)
 	require.Nil(t, kv)
 }
