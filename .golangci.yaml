@@ -2,15 +2,12 @@ version: "2"
 linters:
   default: all
   disable:
-    - copyloopvar
-    - err113
-    - intrange
+    - copyloopvar # project is lower than Go 1.22
+    - intrange    # project is lower than Go 1.22
     - nlreturn
-    - paralleltest
-    - revive
-    - varnamelen
-    - wrapcheck
+    - revive      # TODO: has to be turned on
     - wsl
+    - wsl_v5
   settings:
     cyclop:
       max-complexity: 50
@@ -28,6 +25,8 @@ linters:
             - "$gostd"
             - github.com/michurin/systemd-env-file/sdenv
             - github.com/stretchr/testify/
+    varnamelen:
+      max-distance: 120
   exclusions:
     generated: lax
     warn-unused: true
