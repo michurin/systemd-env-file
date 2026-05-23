@@ -96,7 +96,6 @@ join lines"
 			},
 		},
 	} {
-		cs := cs
 		t.Run(cs.name, func(t *testing.T) {
 			t.Parallel()
 			kv, err := sdenv.Parser([]byte(cs.data))

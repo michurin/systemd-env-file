@@ -10,16 +10,15 @@ jobs:
     strategy:
       matrix:
         go:
-          - "1.20"
-          - "1.21"
           - "1.22"
           - "1.23"
           - "1.24"
           - "1.25"
+          - "1.26"
     name: "Go ${{ matrix.go }} build and integration test"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
         with:
           go-version: "${{ matrix.go }}"
       - run: "cmd/xenv/ci/run"
@@ -27,15 +26,15 @@ jobs:
     runs-on: ubuntu-latest
     name: "Unit test and lint"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
         with:
-          go-version: "1.25"
-      - uses: golangci/golangci-lint-action@v7
+          go-version: "1.26"
+      - uses: golangci/golangci-lint-action@v9
         with:
-          version: "v2.6.1"
+          version: "v2.12.2"
       - run: "go test -v -race -coverprofile=coverage.txt -covermode=atomic ./sdenv/..."
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # required
           files: ./coverage.txt

@@ -2,9 +2,9 @@ version: "2"
 linters:
   default: all
   disable:
-    - copyloopvar # project is lower than Go 1.22
-    - intrange    # project is lower than Go 1.22
+    - gomodguard  # deprecated
     - nlreturn
+    - prealloc
     - revive      # TODO: has to be turned on
     - wsl
     - wsl_v5
@@ -27,6 +27,8 @@ linters:
             - github.com/stretchr/testify/
     varnamelen:
       max-distance: 120
+    goconst:
+      ignore-tests: true
   exclusions:
     generated: lax
     warn-unused: true
